@@ -23,7 +23,6 @@ To use this template, you first need to install and configure the Slack CLI.
 Step-by-step instructions can be found in our
 [Quickstart Guide](https://api.slack.com/future/quickstart).
 
-
 ## Resources
 
 To learn more about developing with the CLI, you can visit the following guides:
