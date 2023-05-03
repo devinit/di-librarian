@@ -28,5 +28,6 @@ export default Manifest({
     "groups:history",
     "groups:read",
     "reactions:read",
+    "files:read",
   ],
 });
