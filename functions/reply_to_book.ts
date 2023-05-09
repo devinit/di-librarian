@@ -24,7 +24,7 @@ export const def = DefineFunction({
   },
 });
 
-export default SlackFunction(def, async ({ inputs, client }) => {
+export default SlackFunction(def, async ({ inputs, client, env }) => {
   const emptyOutputs = { outputs: {} };
   const booksToShelve = Array<string>();
   const replies = await client.conversations.replies({
@@ -35,14 +35,42 @@ export default SlackFunction(def, async ({ inputs, client }) => {
   if (files.length > 0) {
     for (const file of files) {
       booksToShelve.push(file.name);
-      // TODO: Upload files to S3/Database
+      const body = new FormData();
+      body.append("title", file.name);
+      body.append("source", file.url_private);
+      await fetch(
+        "https://knowledge.devinit.org/api/documents/",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Basic ${
+              btoa(`${env.KNOWLEDGE_USER}:${env.KNOWLEDGE_PASS}`)
+            }`,
+          },
+          body,
+        },
+      );
     }
   }
   const hyperlinks = findHyperlinks(replies.messages);
   if (hyperlinks.length > 0) {
     for (const hyperlink of hyperlinks) {
-      booksToShelve.push(`<${hyperlink}>`);
-      // TODO: Upload link Database for later scraping
+      booksToShelve.push(`<${hyperlink.url}|${hyperlink.name}>`);
+      const body = new FormData();
+      body.append("title", hyperlink.name);
+      body.append("source", hyperlink.url);
+      await fetch(
+        "https://knowledge.devinit.org/api/documents/",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Basic ${
+              btoa(`${env.KNOWLEDGE_USER}:${env.KNOWLEDGE_PASS}`)
+            }`,
+          },
+          body,
+        },
+      );
     }
   }
   const response = `Thanks <@${inputs.user_id}>, I'll save ${
@@ -112,20 +140,28 @@ function findFiles(
 function findHyperlinks(
   // deno-lint-ignore no-explicit-any
   replies: Record<string, any>[],
-): string[] {
-  const hyperlinks = Array<string>();
+  // deno-lint-ignore no-explicit-any
+): Record<string, any>[] {
+  // deno-lint-ignore no-explicit-any
+  const hyperlinks: Record<string, any>[] = [];
+  const urls: string[] = [];
   if (!replies) {
     return hyperlinks;
   }
   for (const messageInThread of replies) {
     const text = messageInThread.text || "";
     const regex =
-      /<(https?:\/\/[\w]+(?:\.[\w]+)+(?:\/[\w-?=%&@$#_.+]+)*\/?)(?:\|((?:[^>])+))?>/g;
+      /<(https?:\/\/[\w]+(?:\.[\w]+)+(?:\/[\w-?=%&;@$#_.+]+)*\/?)(?:\|((?:[^>])+))?>/g;
     const matches = text.matchAll(regex);
     for (const match of matches) {
       const url = match[1];
-      if (!hyperlinks.includes(url)) {
-        hyperlinks.push(url);
+      let name = match[2];
+      if (name === undefined) {
+        name = url;
+      }
+      if (!urls.includes(url)) {
+        urls.push(url);
+        hyperlinks.push({ name: name, url: url });
       }
     }
   }

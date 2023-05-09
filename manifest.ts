@@ -18,7 +18,7 @@ export default Manifest({
   workflows: [
     ReplyToReactionWorkflow,
   ],
-  outgoingDomains: [],
+  outgoingDomains: ["knowledge.devinit.org"],
   datastores: [],
   botScopes: [
     "commands",
