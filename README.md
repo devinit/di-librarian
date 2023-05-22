@@ -18,7 +18,7 @@ have permissions to install apps. If you don’t have one set up, go ahead and
 requires any of [the Slack paid plans](https://slack.com/pricing).
 
 ```
-slack-cli trigger create --trigger-def triggers/configurator.ts
+slack-cli run
 ```
 
 ### Install the Slack CLI

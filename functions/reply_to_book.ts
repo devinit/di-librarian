@@ -7,18 +7,16 @@ export const def = DefineFunction({
   source_file: "functions/reply_to_book.ts",
   input_parameters: {
     properties: {
-      channelId: { type: Schema.types.string },
+      channelId: { type: Schema.slack.types.channel_id },
       messageTs: { type: Schema.types.string },
-      userId: { type: Schema.types.string },
       reaction: { type: Schema.types.string },
     },
-    required: ["channelId", "userId", "messageTs", "reaction"],
+    required: ["channelId", "messageTs", "reaction"],
   },
   output_parameters: {
     properties: {
-      channelId: { type: Schema.types.string },
+      channelId: { type: Schema.slack.types.channel_id },
       messageTs: { type: Schema.types.string },
-      userId: { type: Schema.types.string },
     },
     required: [],
   },
@@ -75,7 +73,7 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
       );
     }
   }
-  const response = `Thanks <@${inputs.userId}>, I'll save ${
+  const response = `Thanks, I'll save ${
     joinWithOxfordCommas(booksToShelve)
   } in the library :${inputs.reaction}:!`;
   if (booksToShelve.length === 0) {
@@ -94,7 +92,6 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
     outputs: {
       channelId: inputs.channelId,
       messageTs: inputs.messageTs,
-      userId: inputs.userId,
     },
   };
 });

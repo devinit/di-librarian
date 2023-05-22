@@ -37,5 +37,8 @@ export default Manifest({
     "groups:read",
     "reactions:read",
     "files:read",
+    "triggers:read",
+    "triggers:write",
+    "channels:join",
   ],
 });
