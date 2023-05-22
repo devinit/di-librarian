@@ -7,18 +7,18 @@ export const def = DefineFunction({
   source_file: "functions/reply_to_book.ts",
   input_parameters: {
     properties: {
-      channel_id: { type: Schema.types.string },
-      message_ts: { type: Schema.types.string },
-      user_id: { type: Schema.types.string },
+      channelId: { type: Schema.types.string },
+      messageTs: { type: Schema.types.string },
+      userId: { type: Schema.types.string },
       reaction: { type: Schema.types.string },
     },
-    required: ["channel_id", "message_ts", "user_id", "reaction"],
+    required: ["channelId", "userId", "messageTs", "reaction"],
   },
   output_parameters: {
     properties: {
-      channel_id: { type: Schema.types.string },
-      message_ts: { type: Schema.types.string },
-      user_id: { type: Schema.types.string },
+      channelId: { type: Schema.types.string },
+      messageTs: { type: Schema.types.string },
+      userId: { type: Schema.types.string },
     },
     required: [],
   },
@@ -28,8 +28,8 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
   const emptyOutputs = { outputs: {} };
   const booksToShelve = Array<string>();
   const replies = await client.conversations.replies({
-    channel: inputs.channel_id,
-    ts: inputs.message_ts,
+    channel: inputs.channelId,
+    ts: inputs.messageTs,
   });
   const files = findFiles(replies.messages);
   if (files.length > 0) {
@@ -38,7 +38,7 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
       const body = new FormData();
       body.append("title", file.name);
       body.append("source", file.url_private);
-      body.append("channel", inputs.channel_id);
+      body.append("channel", inputs.channelId);
       await fetch(
         "https://knowledge.devinit.org/api/documents/",
         {
@@ -60,7 +60,7 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
       const body = new FormData();
       body.append("title", hyperlink.name);
       body.append("source", hyperlink.url);
-      body.append("channel", inputs.channel_id);
+      body.append("channel", inputs.channelId);
       await fetch(
         "https://knowledge.devinit.org/api/documents/",
         {
@@ -75,7 +75,7 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
       );
     }
   }
-  const response = `Thanks <@${inputs.user_id}>, I'll save ${
+  const response = `Thanks <@${inputs.userId}>, I'll save ${
     joinWithOxfordCommas(booksToShelve)
   } in the library :${inputs.reaction}:!`;
   if (booksToShelve.length === 0) {
@@ -86,15 +86,15 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
   }
   await sayInThread(
     client,
-    inputs.channel_id,
-    inputs.message_ts,
+    inputs.channelId,
+    inputs.messageTs,
     response,
   );
   return {
     outputs: {
-      channel_id: inputs.channel_id,
-      message_ts: inputs.message_ts,
-      user_id: inputs.user_id,
+      channelId: inputs.channelId,
+      messageTs: inputs.messageTs,
+      userId: inputs.userId,
     },
   };
 });

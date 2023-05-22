@@ -17,6 +17,10 @@ have permissions to install apps. If you don’t have one set up, go ahead and
 [create one](https://slack.com/create). Also, please note that the workspace
 requires any of [the Slack paid plans](https://slack.com/pricing).
 
+```
+slack-cli trigger create --trigger-def triggers/configurator.ts
+```
+
 ### Install the Slack CLI
 
 To use this template, you first need to install and configure the Slack CLI.

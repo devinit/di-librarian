@@ -7,12 +7,12 @@ const workflow = DefineWorkflow({
   input_parameters: {
     properties: {
       // All the possible inputs from the "reaction_added" event trigger
-      channel_id: { type: Schema.slack.types.channel_id },
-      user_id: { type: Schema.slack.types.user_id },
-      message_ts: { type: Schema.types.string },
+      channelId: { type: Schema.slack.types.channel_id },
+      userId: { type: Schema.slack.types.user_id },
+      messageTs: { type: Schema.types.string },
       reaction: { type: Schema.types.string },
     },
-    required: ["channel_id", "user_id", "message_ts", "reaction"],
+    required: ["channelId", "userId", "messageTs", "reaction"],
   },
 });
 
