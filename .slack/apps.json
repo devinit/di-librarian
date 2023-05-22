@@ -1,1 +1,11 @@
-{}
+{
+  "apps": {
+    "devinitorg": {
+      "name": "devinitorg",
+      "app_id": "A058QJTL42J",
+      "team_id": "T0NBT5ZDM",
+      "IsDev": false
+    }
+  },
+  "default": "devinitorg"
+}
