@@ -38,6 +38,7 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
       const body = new FormData();
       body.append("title", file.name);
       body.append("source", file.url_private);
+      body.append("channel", inputs.channel_id);
       await fetch(
         "https://knowledge.devinit.org/api/documents/",
         {
@@ -59,6 +60,7 @@ export default SlackFunction(def, async ({ inputs, client, env }) => {
       const body = new FormData();
       body.append("title", hyperlink.name);
       body.append("source", hyperlink.url);
+      body.append("channel", inputs.channel_id);
       await fetch(
         "https://knowledge.devinit.org/api/documents/",
         {
