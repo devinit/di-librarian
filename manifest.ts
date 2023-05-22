@@ -1,7 +1,11 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 
 import ReplyToReactionWorkflow from "./workflows/reply_to_reaction.ts";
+import configurator from "./workflows/configurator.ts";
+import maintenanceJob from "./workflows/maintenance_job.ts";
 import { def as replyToBook } from "./functions/reply_to_book.ts";
+import { def as configure } from "./functions/configure.ts";
+import { def as maintainMembership } from "./functions/maintain_membership.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -14,9 +18,13 @@ export default Manifest({
   icon: "assets/default_new_app_icon.png",
   functions: [
     replyToBook,
+    configure,
+    maintainMembership,
   ],
   workflows: [
     ReplyToReactionWorkflow,
+    configurator,
+    maintenanceJob,
   ],
   outgoingDomains: ["knowledge.devinit.org"],
   datastores: [],
