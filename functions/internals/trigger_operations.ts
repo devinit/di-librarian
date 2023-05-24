@@ -50,6 +50,12 @@ export async function createOrUpdateTrigger(
       event: {
         event_type: "slack#/events/reaction_added",
         channel_ids,
+        filter: {
+          version: 1,
+          root: {
+            statement: "{{data.reaction}} == book",
+          },
+        },
       },
       inputs: triggerInputs,
     });
